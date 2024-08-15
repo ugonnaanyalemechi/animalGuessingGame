@@ -8,10 +8,13 @@
 using namespace std;
 
 string animalFileName_SAVE = "../../../myAnimalTreeDB.txt";
-fstream inputFile;
-
 Debugging debug;
 
+string convertStringToLowercase(string);
+void askUserToEnterValidAnswer();
+void declareFileOpenFail(string);
+
+// game setup
 void welcomeUser();
 string convertStringToLowercase(string);
 string askUserGameDataOptions();
@@ -19,17 +22,17 @@ string enterInputFileName();
 void processAnswerForGameDataOptions();
 void createAndInitializeRootNode(AnimalNode*&, AnimalNode*&);
 void processGameOperations(AnimalNode*&, AnimalNode*&, AnimalNode*&, bool&, bool&);
-void declareFileOpenFail(string);
 void openInputFile();
 void transferInputFileDataToGame(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 void loadAnimalGameData(AnimalNode*&, AnimalNode*&, AnimalNode*&);
+
+// game operations
 void initializeGame(AnimalNode*&, AnimalNode*&, AnimalNode*&, bool&);
 void processAnswerToComputerQuestion(AnimalNode*&);
 void promptUserToThinkOfAnimal();
 string askUserQuestion(string, AnimalNode*);
 void goToNodeYesAnsInCurrentNodePointsTo(AnimalNode*&);
 void goToNodeNoAnsInCurrentNodePointsTo(AnimalNode*&);
-void askUserToEnterValidAnswer();
 string guessAnimal(AnimalNode*);
 void processAnswerToComputerAnimalGuess(AnimalNode*&, AnimalNode*&);
 void computerWinsGame();
@@ -48,6 +51,8 @@ void removeAnimalInCurrentNode(AnimalNode*&);
 void processUserResponseToPlayAgain(AnimalNode*, string, bool&, bool&);
 void askUserToPlayAgain(AnimalNode*, bool&, bool&);
 void endGame(AnimalNode*, bool&);
+
+// save game data
 void checkOutputFileOpens(ostream&);
 void writeGameDataToFile(AnimalNode*);
 void saveAnimalGameData(AnimalNode*);
@@ -311,6 +316,8 @@ string askUserQuestion(string answer, AnimalNode* currentNode) {
     debug.show("User's answer", answer);
     return answer;
 }
+
+// both of these functions may need to go because of redundancy
 void goToNodeYesAnsInCurrentNodePointsTo(AnimalNode*& currentNode) {
     currentNode = currentNode->yesAns;
     debug.showNodeContents("Current node", currentNode);
