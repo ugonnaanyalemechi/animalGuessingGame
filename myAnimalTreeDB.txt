@@ -1,0 +1,38 @@
+Q
+does it have cubs for babies?
+Q
+does it perform in the circus?
+G
+Tiger
+Q
+Does it live in China?
+G
+panda
+G
+bear
+Q
+does it swim?
+Q
+did it swallow Jonah?
+G
+whale
+G
+fish
+Q
+does it eat cheese?
+G
+mouse
+Q
+does it purr?
+G
+cat
+Q
+is it afraid of mice?
+G
+elephant
+Q
+is it often nicknamed Billy?
+G
+goat
+G
+lizard
