@@ -1,63 +1,17 @@
-﻿// -- HEADER FILES -- //
-#include <iostream> // Used to display info and gather keyboard input
-#include <iomanip> // Used to maniuplate output appearance in debugging code
-#include <string> // Used to store messages in string objects
-#include <fstream> // Used to allow game to be saved via printing to text file
+﻿#include <iostream>
+#include <iomanip>
+#include <fstream> 
+#include <string> // Used to access getline()
+#include "AnimalNode.h"
+#include "Debugging.h"
 
 using namespace std;
 
-// -- GLOBAL VARIABLES -- //
 string animalFileName_SAVE = "../../../myAnimalTreeDB.txt";
 fstream inputFile;
 
-// -- ANIMAL NODE -- //
-struct AnimalNode { // struct definition must remain here
-    string question;
-    string animal;
-    AnimalNode* yesAns = nullptr;
-    AnimalNode* noAns = nullptr;
-};
-
-// -- DEBUGGING -- //
-struct Debugging {
-    bool showFlow = false;
-    bool allowShowNodeContents = false;
-    bool allowFlowPause = false;
-
-    void pause() {
-        if (allowFlowPause)
-            system("pause");
-    }
-    void show(string msg1, string msg2 = "") { // displays message (has ability to have two differnt messages)
-        if (showFlow) {
-            if (msg2 != "")
-                cout << "*** " << msg1 << ": " << msg2 << " ***" << endl;
-            else
-                cout << "*** " << msg1 << " ***" << endl;
-        }
-    }
-    void show(string msg, int num) { // displays message and value
-        if (showFlow)
-            cout << "*** " << msg << ": " << num << " ***" << endl;
-    }
-    void showNodeContents(string nodeName, AnimalNode* node) {
-        if (allowShowNodeContents) {
-            cout << endl;
-            cout << "-------------------------------------------" << endl;
-            cout << setw(20) << "*** Contents of " << nodeName << " ***" << endl;
-            cout << "-------------------------------------------" << endl;
-            cout << "*** " << nodeName << "'s question: " << node->question << endl;
-            cout << "*** " << nodeName << "'s animal: " << node->animal << endl;
-            cout << "*** " << nodeName << "'s yes answer points to: " << node->yesAns << endl;
-            cout << "*** " << nodeName << "'s no answer points to: " << node->noAns << endl;
-            cout << endl;
-            pause();
-        }
-    }
-};
 Debugging debug;
 
-// -- PROTOTYPES -- //
 void welcomeUser();
 string convertStringToLowercase(string);
 string askUserGameDataOptions();
@@ -98,8 +52,6 @@ void checkOutputFileOpens(ostream&);
 void writeGameDataToFile(AnimalNode*);
 void saveAnimalGameData(AnimalNode*);
 
-
-// -- FUNCTIONS -- //
 void welcomeUser() {
     cout << "Welcome to the Animal Guessing Game!\n" << endl;
     processAnswerForGameDataOptions();
