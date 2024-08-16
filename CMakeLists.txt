@@ -5,6 +5,9 @@ project (animalGuessingGame)
 set(SOURCE_FILES
 	main.cpp
 	Debugging.cpp
+	GameSetup.cpp
+	GameOperations.cpp
+	GameSave.cpp
 )
 
 set(CMAKE_CXX_STANDARD 20)

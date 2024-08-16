@@ -1,9 +1,9 @@
 Q
-does it have cubs for babies?
+Does it have cubs for babies?
 Q
-does it perform in the circus?
+Does it perform in the circus?
 G
-Tiger
+tiger
 Q
 Does it live in China?
 G
@@ -11,27 +11,31 @@ panda
 G
 bear
 Q
-does it swim?
+Does it swim?
 Q
-did it swallow Jonah?
+Did it swallow Jonah?
 G
 whale
+Q
+Does it have webbed feet?
+G
+duck
 G
 fish
 Q
-does it eat cheese?
+Does it eat cheese?
 G
 mouse
 Q
-does it purr?
+Does it purr?
 G
 cat
 Q
-is it afraid of mice?
+Is it afraid of mice?
 G
 elephant
 Q
-is it often nicknamed Billy?
+Is it often nicknamed Billy?
 G
 goat
 G
