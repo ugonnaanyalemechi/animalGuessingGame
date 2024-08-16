@@ -9,11 +9,10 @@ using namespace std;
 fstream inputFile;
 Debugging debug1;
 
-void GameSetup::welcomeUser() { // will need to add in parameters
+void GameSetup::welcomeUser(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) { // will need to add in parameters
     cout << "Welcome to the Animal Guessing Game!\n" << endl;
     processAnswerForGameDataOptions();
-    //loadAnimalGameData(AnimalNode*&, AnimalNode*&, AnimalNode*&);
-    //createAndInitializeRootNode(AnimalNode*&, AnimalNode*&);
+    loadAnimalGameData(newNode, rootNode, currentNode);
 }
 
 void GameSetup::processAnswerForGameDataOptions() {
@@ -205,12 +204,4 @@ void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& r
             continue;
         }
     }
-}
-
-void GameSetup::createAndInitializeRootNode(AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    rootNode = new AnimalNode;
-    rootNode->animal = "lizard";
-    rootNode->yesAns = nullptr;
-    rootNode->noAns = nullptr;
-    currentNode = rootNode; // on program start, the game starts out at the rootNode temporarily with asking if animal is a lizard
 }

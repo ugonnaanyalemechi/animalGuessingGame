@@ -1,26 +1,27 @@
 #include "GameOperations.h"
 #include "main.h"
 #include "Debugging.h"
+#include "GameSave.h"
 #include <iostream>
 
 using namespace std;
 
 Debugging debug2;
 
-void GameOperations::processGameOperations(AnimalNode*& rootNode, AnimalNode*& currentNode, AnimalNode*& newNode, bool& startGame, bool& gameInProgress) {
+void GameOperations::processGameOperations(AnimalNode*& rootNode, AnimalNode*& currentNode, AnimalNode*& newNode, GameSave gameSave, GameSetup gameSetup) {
     while (startGame) {
         if (!gameInProgress)
-            initializeGame(newNode, rootNode, currentNode, gameInProgress);
+            initializeGame(newNode, rootNode, currentNode);
         if (currentNode->question != "") // if question string is filled, program will ask a question
             processAnswerToComputerQuestion(currentNode);
         else if (currentNode->animal != "") { // if guess string is filled, program will attempt to guess user's animal
             processAnswerToComputerAnimalGuess(currentNode, newNode);
-            askUserToPlayAgain(rootNode, startGame, gameInProgress);
+            askUserToPlayAgain(rootNode, gameSave, gameSetup);
         }
     }
 }
 
-void GameOperations::initializeGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode, bool& gameInProgress) {
+void GameOperations::initializeGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
     //loadAnimalGameData(newNode, rootNode, currentNode);
     promptUserToThinkOfAnimal();
     currentNode = rootNode;
@@ -191,29 +192,29 @@ void GameOperations::storeCurrentNodeAnimalIntoNewNodeYesAns(AnimalNode*& newNod
     debug2.showNodeContents("New node w/ old animal ('yes' answer)", newNode);
 }
 
-void GameOperations::askUserToPlayAgain(AnimalNode* rootNode, bool& startGame, bool& gameInProgress) {
+void GameOperations::askUserToPlayAgain(AnimalNode* rootNode, GameSave gameSave, GameSetup gameSetup) {
     string answer;
     cout << "\nWould you like to play again?" << endl;
     cout << "Enter answer here: "; cin >> answer;
     answer = convertStringToLowercase(answer);
     debug2.show("User's response", answer);
 
-    processUserResponseToPlayAgain(rootNode, answer, startGame, gameInProgress);
+    processUserResponseToPlayAgain(rootNode, answer, gameSave, gameSetup);
 }
 
-void GameOperations::processUserResponseToPlayAgain(AnimalNode* rootNode, string answer, bool& startGame, bool& gameInProgress) {
+void GameOperations::processUserResponseToPlayAgain(AnimalNode* rootNode, string answer, GameSave gameSave, GameSetup gameSetup) {
     if (answer == "no")
-        endGame(rootNode, startGame);
+        endGame(rootNode, gameSave, gameSetup);
     else if (answer == "yes")
         gameInProgress = false; // user will return back to the start of the game
     else {
         askUserToEnterValidAnswer();
-        askUserToPlayAgain(rootNode, startGame, gameInProgress);
+        askUserToPlayAgain(rootNode, gameSave, gameSetup);
     }
 }
 
-void endGame(AnimalNode* rootNode, bool& startGame) {
+void GameOperations::endGame(AnimalNode* rootNode, GameSave gameSave, GameSetup gameSetup) {
     startGame = false;
-    saveAnimalGameData(rootNode); // will be used in save game class
+    gameSave.saveAnimalGameData(rootNode, gameSetup); // will be used in save game class
     cout << "\nPlay again soon!\n" << endl;
 }

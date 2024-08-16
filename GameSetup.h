@@ -7,8 +7,6 @@ using std::string;
 class GameSetup
 {
 private:
-	string animalFileName_SAVE = "../../../myAnimalTreeDB.txt";
-	
 	void processAnswerForGameDataOptions();
 	string askUserGameDataOptions();
 	string enterInputFileName();
@@ -16,8 +14,7 @@ private:
 
 	void loadAnimalGameData(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 	void transferInputFileDataToGame(AnimalNode*&, AnimalNode*&, AnimalNode*&);
-
-	void createAndInitializeRootNode(AnimalNode*&, AnimalNode*&);
 public:
-	void welcomeUser(); // rename this function to something like gameSetupProcess
+	void welcomeUser(AnimalNode*&, AnimalNode*&, AnimalNode*&); // rename this function to something like gameSetupProcess
+	string animalFileName_SAVE = "../../../myAnimalTreeDB.txt";
 };

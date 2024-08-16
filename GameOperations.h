@@ -1,6 +1,7 @@
 #pragma once
 #include "AnimalNode.h"
 #include "GameSetup.h"
+#include "GameSave.h"
 #include <string>
 
 using std::string;
@@ -8,7 +9,10 @@ using std::string;
 class GameOperations 
 {
 private:
-	void initializeGame(AnimalNode*&, AnimalNode*&, AnimalNode*&, bool&);
+	bool startGame = true;
+	bool gameInProgress = false;
+
+	void initializeGame(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 	void promptUserToThinkOfAnimal();
 
 	void processAnswerToComputerQuestion(AnimalNode*&);
@@ -20,23 +24,21 @@ private:
 	string guessAnimal(AnimalNode*);
 	void computerWinsGame();
 	void computerLosesGame(AnimalNode*&, AnimalNode*&);
-		void storeNewAnimalIntoNewNode(AnimalNode*&);
-		void storeNewQuestionIntoCurrentNode(AnimalNode*&, AnimalNode*);
-		void processNewAnsForNewNode(AnimalNode*&, AnimalNode*&);
-			string askForNewAnswerForNewNode(AnimalNode*);
-			void processYesAnsForNewAnimal(AnimalNode*&, AnimalNode*&);
-				void currentNodeYesAnsPointsToNewNode(AnimalNode*&, AnimalNode*);
-				void storeCurrentNodeAnimalIntoNewNodeNoAns(AnimalNode*&, AnimalNode*);
-				void removeAnimalInCurrentNode(AnimalNode*&);
-			void processNoAnsForNewAnimal(AnimalNode*&, AnimalNode*&);
-				void currentNodeNoAnsPointsToNewNode(AnimalNode*&, AnimalNode*);
-				void storeCurrentNodeAnimalIntoNewNodeYesAns(AnimalNode*&, AnimalNode*);
+	void storeNewAnimalIntoNewNode(AnimalNode*&);
+	void storeNewQuestionIntoCurrentNode(AnimalNode*&, AnimalNode*);
+	void processNewAnsForNewNode(AnimalNode*&, AnimalNode*&);
+	string askForNewAnswerForNewNode(AnimalNode*);
+	void processYesAnsForNewAnimal(AnimalNode*&, AnimalNode*&);
+	void currentNodeYesAnsPointsToNewNode(AnimalNode*&, AnimalNode*);
+	void storeCurrentNodeAnimalIntoNewNodeNoAns(AnimalNode*&, AnimalNode*);
+	void removeAnimalInCurrentNode(AnimalNode*&);
+	void processNoAnsForNewAnimal(AnimalNode*&, AnimalNode*&);
+	void currentNodeNoAnsPointsToNewNode(AnimalNode*&, AnimalNode*);
+	void storeCurrentNodeAnimalIntoNewNodeYesAns(AnimalNode*&, AnimalNode*);
 
-	void askUserToPlayAgain(AnimalNode*, bool&, bool&);
-		void processUserResponseToPlayAgain(AnimalNode*, string, bool&, bool&);
-		void endGame(AnimalNode*, bool&, GameSetup);
-
-
+	void askUserToPlayAgain(AnimalNode*, GameSave, GameSetup);
+	void processUserResponseToPlayAgain(AnimalNode*, string, GameSave, GameSetup);
+	void endGame(AnimalNode*, GameSave, GameSetup);
 public:
-	void processGameOperations(AnimalNode*&, AnimalNode*&, AnimalNode*&, bool&, bool&);
+	void processGameOperations(AnimalNode*&, AnimalNode*&, AnimalNode*&, GameSave, GameSetup);
 };

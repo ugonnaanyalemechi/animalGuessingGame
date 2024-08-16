@@ -7,6 +7,7 @@ set(SOURCE_FILES
 	Debugging.cpp
 	GameSetup.cpp
 	GameOperations.cpp
+	GameSave.cpp
 )
 
 set(CMAKE_CXX_STANDARD 20)
