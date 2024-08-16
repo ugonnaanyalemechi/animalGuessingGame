@@ -15,6 +15,6 @@ private:
 	void loadAnimalGameData(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 	void transferInputFileDataToGame(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 public:
-	void welcomeUser(AnimalNode*&, AnimalNode*&, AnimalNode*&); // rename this function to something like gameSetupProcess
-	string animalFileName_SAVE = "../../../myAnimalTreeDB.txt";
+	void gameSetupProcess(AnimalNode*&, AnimalNode*&, AnimalNode*&);
+	string gameDataFile = "../../../defaultGameDataFile.txt";
 };

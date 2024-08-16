@@ -22,7 +22,6 @@ void GameOperations::processGameOperations(AnimalNode*& rootNode, AnimalNode*& c
 }
 
 void GameOperations::initializeGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    //loadAnimalGameData(newNode, rootNode, currentNode);
     promptUserToThinkOfAnimal();
     currentNode = rootNode;
     gameInProgress = true;
@@ -32,10 +31,10 @@ void GameOperations::promptUserToThinkOfAnimal() {
     int counter = 0;
     cout << "\nThink of an animal...when you are ready, press the enter key once or twice to proceed.";
     cin.ignore();
-    while (cin.get() != '\n') // '\n' = enter key
+    while (cin.get() != '\n') // when an enter key is not inputted
         counter++; // counts the number of key inputs that do not correspond with the enter key
     if (counter != 0) {
-        cout << "Please press the enter key to proceed!" << endl;
+        cout << "Please press the enter key to proceed!\n";
         debug2.show("Number of non-enter-key keystrokes", counter);
         return promptUserToThinkOfAnimal();
     }
@@ -54,13 +53,13 @@ void GameOperations::processAnswerToComputerQuestion(AnimalNode*& currentNode) {
         return; // I think this can be removed
     }
     else {
-        askUserToEnterValidAnswer();
+        cout << "Please type in either yes or no!\n";
         return processAnswerToComputerQuestion(currentNode);
     }
 }
 
 string GameOperations::askUserQuestion(string answer, AnimalNode* currentNode) {
-    cout << "\n" << currentNode->question << endl;
+    cout << "\n" << currentNode->question << "\n";
     cout << "Enter answer here: "; cin >> answer;
     debug2.show("User's answer", answer);
     return answer;
@@ -85,14 +84,14 @@ void GameOperations::processAnswerToComputerAnimalGuess(AnimalNode*& currentNode
     else if (answer == "no")
         computerLosesGame(currentNode, newNode);
     else {
-        askUserToEnterValidAnswer();
+        cout << "Please type in either yes or no!\n";
         return processAnswerToComputerAnimalGuess(currentNode, newNode);
     }
 }
 
 string GameOperations::guessAnimal(AnimalNode* currentNode) {
     string answer;
-    cout << "\nIs the animal you are thinking of a(an) " << currentNode->animal << "?" << endl;
+    cout << "\nIs the animal you are thinking of a(an) " << currentNode->animal << "?\n";
     cout << "Enter answer here: "; cin >> answer;
     debug2.show("User's answer", answer);
     return answer;
@@ -101,8 +100,7 @@ string GameOperations::guessAnimal(AnimalNode* currentNode) {
 void GameOperations::computerWinsGame() {
     string winStatements[] = { "Awesome! ", "Woohoo! ", "Great! ", "Nice! ", "Let's go! " };
     int randomNum = rand() % 5;
-
-    cout << "\n" << winStatements[randomNum] << "I guessed your animal!" << endl;
+    cout << "\n" << winStatements[randomNum] << "I guessed your animal!\n";
 }
 
 void GameOperations::computerLosesGame(AnimalNode*& currentNode, AnimalNode*& newNode) {
@@ -114,7 +112,7 @@ void GameOperations::computerLosesGame(AnimalNode*& currentNode, AnimalNode*& ne
 void GameOperations::storeNewAnimalIntoNewNode(AnimalNode*& newNode) {
     newNode = new AnimalNode;
     string animal;
-    cout << "\nWhat animal did you have in mind?" << endl;
+    cout << "\nWhat animal did you have in mind?\n";
     cout << "Enter animal here: "; cin.ignore(); getline(cin, animal);
     animal = convertStringToLowercase(animal);
     newNode->animal = animal;
@@ -123,7 +121,7 @@ void GameOperations::storeNewAnimalIntoNewNode(AnimalNode*& newNode) {
 
 void GameOperations::storeNewQuestionIntoCurrentNode(AnimalNode*& currentNode, AnimalNode* newNode) {
     string question;
-    cout << "\nWhat is a yes/no question I can use to tell a(an) " << currentNode->animal << " from a(an) " << newNode->animal << "?" << endl;
+    cout << "\nWhat is a yes/no question I can use to tell a(an) " << currentNode->animal << " from a(an) " << newNode->animal << "?\n";
     cout << "Enter question here: "; getline(cin, question);
     question[0] = toupper(question[0]); // converts first letter in question to uppercase
     currentNode->question = question;
@@ -138,14 +136,14 @@ void GameOperations::processNewAnsForNewNode(AnimalNode*& currentNode, AnimalNod
     else if (newAnswer == "no")
         processNoAnsForNewAnimal(currentNode, newNode);
     else {
-        askUserToEnterValidAnswer();
+        cout << "Please type in either yes or no!\n";
         return processNewAnsForNewNode(currentNode, newNode);
     }
 }
 
 string GameOperations::askForNewAnswerForNewNode(AnimalNode* newNode) {
     string newAnswer;
-    cout << "\nFor a " << newNode->animal << ", is the answer yes or no?" << endl;
+    cout << "\nFor a " << newNode->animal << ", is the answer yes or no?\n";
     cout << "Enter answer here: "; cin >> newAnswer;
     debug2.show("User's answer for " + newNode->animal, newAnswer);
     return newAnswer;
@@ -194,7 +192,7 @@ void GameOperations::storeCurrentNodeAnimalIntoNewNodeYesAns(AnimalNode*& newNod
 
 void GameOperations::askUserToPlayAgain(AnimalNode* rootNode, GameSave gameSave, GameSetup gameSetup) {
     string answer;
-    cout << "\nWould you like to play again?" << endl;
+    cout << "\nWould you like to play again?\n";
     cout << "Enter answer here: "; cin >> answer;
     answer = convertStringToLowercase(answer);
     debug2.show("User's response", answer);
@@ -208,13 +206,13 @@ void GameOperations::processUserResponseToPlayAgain(AnimalNode* rootNode, string
     else if (answer == "yes")
         gameInProgress = false; // user will return back to the start of the game
     else {
-        askUserToEnterValidAnswer();
+        cout << "Please type in either yes or no!\n";
         askUserToPlayAgain(rootNode, gameSave, gameSetup);
     }
 }
 
 void GameOperations::endGame(AnimalNode* rootNode, GameSave gameSave, GameSetup gameSetup) {
     startGame = false;
-    gameSave.saveAnimalGameData(rootNode, gameSetup); // will be used in save game class
-    cout << "\nPlay again soon!\n" << endl;
+    gameSave.saveAnimalGameData(rootNode, gameSetup);
+    cout << "\nPlay again soon!\n";
 }

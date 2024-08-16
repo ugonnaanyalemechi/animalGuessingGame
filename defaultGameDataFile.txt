@@ -18,6 +18,10 @@ G
 whale
 Q
 Does it have webbed feet?
+Q
+Does it have a shell?
+G
+turtle
 G
 duck
 G

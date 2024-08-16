@@ -9,8 +9,8 @@ using namespace std;
 fstream inputFile;
 Debugging debug1;
 
-void GameSetup::welcomeUser(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) { // will need to add in parameters
-    cout << "Welcome to the Animal Guessing Game!\n" << endl;
+void GameSetup::gameSetupProcess(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
+    cout << "Welcome to the Animal Guessing Game!\n\n";
     processAnswerForGameDataOptions();
     loadAnimalGameData(newNode, rootNode, currentNode);
 }
@@ -19,20 +19,19 @@ void GameSetup::processAnswerForGameDataOptions() {
     string answer;
     answer = askUserGameDataOptions();
     answer = convertStringToLowercase(answer);
-    if (answer == "yes") {
+    if (answer == "yes")
         return;
-    }
     else if (answer == "no")
-        animalFileName_SAVE = enterInputFileName();
+        gameDataFile = enterInputFileName();
     else {
-        askUserToEnterValidAnswer();
+        cout << "Please type in either yes or no!\n";
         return processAnswerForGameDataOptions();
     }
 }
 
 string GameSetup::askUserGameDataOptions() {
     string answer;
-    cout << "\nWould you like to use the default game data? If not, you can enter a file to your own." << endl;
+    cout << "Would you like to use the default game data? If not, you can enter a file of your own.\n";
     cout << "Enter answer here: "; cin >> answer;
     debug1.show("User's answer");
     return answer;
@@ -45,14 +44,13 @@ string GameSetup::enterInputFileName() {
 }
 
 void GameSetup::openInputFile() {
-    inputFile.open(animalFileName_SAVE);
-    if (inputFile.fail()) {
-        declareFileOpenFail(animalFileName_SAVE);
-    }
+    inputFile.open(gameDataFile);
+    if (inputFile.fail())
+        declareFileOpenFail(gameDataFile);
 }
 
 void GameSetup::loadAnimalGameData(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    debug1.show("File name used", animalFileName_SAVE); debug1.pause();
+    debug1.show("File name used", gameDataFile); debug1.pause();
     openInputFile();
     transferInputFileDataToGame(newNode, rootNode, currentNode);
 }
