@@ -19,5 +19,5 @@ private:
 
 	void createAndInitializeRootNode(AnimalNode*&, AnimalNode*&);
 public:
-	void welcomeUser();
+	void welcomeUser(); // rename this function to something like gameSetupProcess
 };

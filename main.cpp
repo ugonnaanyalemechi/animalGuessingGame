@@ -4,27 +4,15 @@
 #include <string> // Used to access getline()
 #include "AnimalNode.h"
 #include "Debugging.h"
+#include "GameSetup.h"
 
 using namespace std;
 
-string animalFileName_SAVE = "../../../myAnimalTreeDB.txt";
 Debugging debug;
 
 string convertStringToLowercase(string);
 void askUserToEnterValidAnswer();
 void declareFileOpenFail(string);
-
-// game setup
-void welcomeUser();
-string convertStringToLowercase(string);
-string askUserGameDataOptions();
-string enterInputFileName();
-void processAnswerForGameDataOptions();
-void createAndInitializeRootNode(AnimalNode*&, AnimalNode*&);
-void processGameOperations(AnimalNode*&, AnimalNode*&, AnimalNode*&, bool&, bool&);
-void openInputFile();
-void transferInputFileDataToGame(AnimalNode*&, AnimalNode*&, AnimalNode*&);
-void loadAnimalGameData(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 
 // game operations
 void initializeGame(AnimalNode*&, AnimalNode*&, AnimalNode*&, bool&);
@@ -57,207 +45,12 @@ void checkOutputFileOpens(ostream&);
 void writeGameDataToFile(AnimalNode*);
 void saveAnimalGameData(AnimalNode*);
 
-void welcomeUser() {
-    cout << "Welcome to the Animal Guessing Game!\n" << endl;
-    processAnswerForGameDataOptions();
-}
 string convertStringToLowercase(string text) {
     for (int i = 0; i < text.length(); i++) // looks at each character in string an makes it a lowercase letter
         text[i] = tolower(text[i]);
     return text;
 }
-string askUserGameDataOptions() {
-    string answer;
-    cout << "\nWould you like to use the default game data? If not, you can enter a file to your own." << endl;
-    cout << "Enter answer here: "; cin >> answer;
-    debug.show("User's answer");
-    return answer;
-}
-void processAnswerForGameDataOptions() {
-    string answer;
-    answer = askUserGameDataOptions();
-    answer = convertStringToLowercase(answer);
-    if (answer == "yes") {
-        return;
-    }
-    else if (answer == "no")
-        animalFileName_SAVE = enterInputFileName();
-    else {
-        askUserToEnterValidAnswer();
-        return processAnswerForGameDataOptions();
-    }
-}
-string enterInputFileName() {
-    string fileName;
-    cout << "\nEnter file name here: "; cin >> fileName;
-    return fileName;
-}
-void openInputFile() {
-    inputFile.open(animalFileName_SAVE);
-    if (inputFile.fail()) {
-        declareFileOpenFail(animalFileName_SAVE);
-    }
-}
-void transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    string fileLine;
-    AnimalNode* lastNodeWithQuestion = nullptr;
-    AnimalNode* lastNodeWithOnePtr = nullptr;
-    AnimalNode* lastNodeWithBothPtrs = nullptr;
-    bool animalGuessDetected = false;
-    bool questionDetected = false;
-    bool onYesAnsPathway = true;
-    bool onNoAnsPathway = false;
-    bool rootNodeEstablished = false;
-    bool checkBranchToFill = false;
-    bool rootNodeYesAnsPathwayComplete = false;
-    bool onRootNodeNoPathway = false;
 
-    while (inputFile) {
-        getline(inputFile, fileLine);
-        debug.show("Current line from the input file being processed", fileLine); debug.pause();
-
-        if (fileLine == "")
-            break;
-
-        // check type of file data
-        if (fileLine == "G") { // next line in text file has the animal name
-            animalGuessDetected = true;
-            continue;
-        }
-        else if (fileLine == "Q") { // next line in text file has a question
-            questionDetected = true;
-            continue;
-        }
-
-        if (checkBranchToFill) {
-            // algorithm for finding next point in binary tree to expand
-            currentNode = rootNode;
-            int counter = 0;
-            while (currentNode->yesAns) {
-                if (rootNodeYesAnsPathwayComplete && !onRootNodeNoPathway) {
-                    currentNode = rootNode->noAns;
-                    onRootNodeNoPathway = true;
-                }
-                if (counter == 2) { // branch to fill was found
-                    // process branch to fill
-                    currentNode = lastNodeWithOnePtr;
-                    checkBranchToFill = false;
-                    if (rootNode == lastNodeWithOnePtr)
-                        rootNodeYesAnsPathwayComplete = true;
-                    break;
-                }
-
-                if ((currentNode->yesAns) && (currentNode->noAns == nullptr)) {
-                    lastNodeWithOnePtr = currentNode;
-                    currentNode = currentNode->yesAns;
-                    continue;
-                }
-                else if (currentNode->yesAns && currentNode->noAns) {
-                    lastNodeWithBothPtrs = currentNode;
-
-                    // check yes-answer node last node with both pointers
-                    currentNode = currentNode->yesAns;
-                    if (currentNode->question != "") {
-                        counter = 0; // eligibility counter is reset because criteria was not met
-                    }
-                    else if (currentNode->animal != "") {
-                        counter++; // eligibility counter was added to because one criteria was met
-                        currentNode = lastNodeWithBothPtrs;
-                    }
-
-                    // check no-answer node last node with both pointers
-                    currentNode = lastNodeWithBothPtrs->noAns;
-                    if (currentNode->question != "") {
-                        counter = 0;
-                        continue;
-                    }
-                    else if (currentNode->animal != "") {
-                        counter++;
-                        currentNode = lastNodeWithBothPtrs;
-                        continue;
-                    }
-                }
-
-                // this part of code may be unnecesary
-                if ((!currentNode->yesAns) && (!currentNode->noAns)) {
-                    currentNode = lastNodeWithBothPtrs->noAns;
-                    counter++;
-                    continue;
-                }
-            }
-        }
-
-        // creates the root node of the binary tree with a question, creates a node for the yes-answer pathway
-        if (questionDetected && !rootNodeEstablished) {
-            newNode = new AnimalNode;
-            rootNode = newNode;
-            rootNode->question = fileLine;
-            newNode = new AnimalNode;
-            rootNode->yesAns = newNode;
-            currentNode = newNode;
-            rootNodeEstablished = true;
-            questionDetected = false;
-            continue;
-        }
-        // fills current node with question pulled from the file, creates a node for the yes-answer pathway 
-        if (questionDetected && onYesAnsPathway) {
-            lastNodeWithQuestion = currentNode;
-            currentNode->question = fileLine;
-            newNode = new AnimalNode;
-            currentNode->yesAns = newNode;
-            currentNode = newNode;
-            questionDetected = false;
-            continue;
-        }
-        // creates a new node for the no-answer pathway, fills that node with a question, creates a new node for the yes-answer pathway, switches to yes-answer pathway via flag
-        if (questionDetected && onNoAnsPathway) {
-            newNode = new AnimalNode;
-            currentNode->noAns = newNode;
-            currentNode = newNode;
-            currentNode->question = fileLine;
-            newNode = new AnimalNode;
-            currentNode->yesAns = newNode;
-            lastNodeWithQuestion = currentNode;
-            currentNode = newNode;
-            onNoAnsPathway = false;
-            onYesAnsPathway = true;
-            questionDetected = false;
-            continue;
-        }
-
-        // fills current node with animal guess, switches to no-answer pathway via flag
-        if (animalGuessDetected && onYesAnsPathway) {
-            currentNode->animal = fileLine;
-            currentNode = lastNodeWithQuestion;
-            onYesAnsPathway = false;
-            onNoAnsPathway = true;
-            animalGuessDetected = false;
-            continue;
-        }
-        // creates a new node for the no-answer pathway, fills that node with an animal guess
-        if (animalGuessDetected && onNoAnsPathway) {
-            newNode = new AnimalNode;
-            currentNode->noAns = newNode;
-            currentNode = newNode;
-            currentNode->animal = fileLine;
-            checkBranchToFill = true;
-            animalGuessDetected = false;
-            continue;
-        }
-    }
-}
-void loadAnimalGameData(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    debug.show("File name used", animalFileName_SAVE); debug.pause();
-    openInputFile();
-    transferInputFileDataToGame(newNode, rootNode, currentNode);
-}
-void createAndInitializeRootNode(AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    rootNode = new AnimalNode;
-    rootNode->animal = "lizard";
-    rootNode->yesAns = nullptr;
-    rootNode->noAns = nullptr;
-    currentNode = rootNode; // on program start, the game starts out at the rootNode temporarily with asking if animal is a lizard
-}
 void processGameOperations(AnimalNode*& rootNode, AnimalNode*& currentNode, AnimalNode*& newNode, bool& startGame, bool& gameInProgress) {
     while (startGame) {
         if (!gameInProgress)
@@ -276,7 +69,7 @@ void declareFileOpenFail(string fileName) {
     exit(0);
 }
 void initializeGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode, bool& gameInProgress) {
-    loadAnimalGameData(newNode, rootNode, currentNode);
+    //loadAnimalGameData(newNode, rootNode, currentNode);
     promptUserToThinkOfAnimal();
     currentNode = rootNode;
     gameInProgress = true;
@@ -287,11 +80,11 @@ void processAnswerToComputerQuestion(AnimalNode*& currentNode) {
     answer = convertStringToLowercase(answer);
     if (answer == "yes") {
         goToNodeYesAnsInCurrentNodePointsTo(currentNode);
-        return;
+        return; // I think this can be removed
     }
     else if (answer == "no") {
         goToNodeNoAnsInCurrentNodePointsTo(currentNode);
-        return;
+        return; // I think this can be removed
     }
     else {
         askUserToEnterValidAnswer();
@@ -326,6 +119,8 @@ void goToNodeNoAnsInCurrentNodePointsTo(AnimalNode*& currentNode) {
     currentNode = currentNode->noAns;
     debug.showNodeContents("Current node", currentNode);
 }
+
+// may remove later due to redundancy
 void askUserToEnterValidAnswer() {
     cout << "Please type in either yes or no!" << endl;
 }
@@ -432,7 +227,7 @@ void removeAnimalInCurrentNode(AnimalNode*& currentNode) {
 }
 void endGame(AnimalNode* rootNode, bool& startGame) {
     startGame = false;
-    saveAnimalGameData(rootNode);
+    saveAnimalGameData(rootNode); // will be used in save game class
     cout << "\nPlay again soon!\n" << endl;
 }
 void processUserResponseToPlayAgain(AnimalNode* rootNode, string answer, bool& startGame, bool& gameInProgress) {
@@ -489,7 +284,6 @@ int main() {
     bool gameInProgress = false;
     srand(time(0)); // for computerWinsGame() function
 
-    welcomeUser();
     processGameOperations(rootNode, currentNode, newNode, startGame, gameInProgress);
 
     return 0;

@@ -9,9 +9,11 @@ using namespace std;
 fstream inputFile;
 Debugging debug1;
 
-void GameSetup::welcomeUser() {
+void GameSetup::welcomeUser() { // will need to add in parameters
     cout << "Welcome to the Animal Guessing Game!\n" << endl;
     processAnswerForGameDataOptions();
+    //loadAnimalGameData(AnimalNode*&, AnimalNode*&, AnimalNode*&);
+    //createAndInitializeRootNode(AnimalNode*&, AnimalNode*&);
 }
 
 void GameSetup::processAnswerForGameDataOptions() {
