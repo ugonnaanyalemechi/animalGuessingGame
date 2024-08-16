@@ -90,6 +90,7 @@ void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& r
             // algorithm for finding next point in binary tree to expand
             currentNode = rootNode;
             int counter = 0;
+            int loopCheck = 0;
             while (currentNode->yesAns) {
                 if (rootNodeYesAnsPathwayComplete && !onRootNodeNoPathway) {
                     currentNode = rootNode->noAns;
@@ -126,11 +127,17 @@ void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& r
                     currentNode = lastNodeWithBothPtrs->noAns;
                     if (currentNode->question != "") {
                         counter = 0;
-                        continue;
+                        //continue;
                     }
                     else if (currentNode->animal != "") {
                         counter++;
                         currentNode = lastNodeWithBothPtrs;
+                        //continue;
+                    }
+
+                    loopCheck++;
+                    if (loopCheck == 10) {
+                        counter = 2;
                         continue;
                     }
                 }
