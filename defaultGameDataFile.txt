@@ -1,17 +1,17 @@
 Q
 Does it have cubs for babies?
 Q
-Does it perform in the circus?
+Does it have stripes?
 G
 tiger
 Q
-Does it live in China?
+Is it known for being native to China?
 G
 panda
 G
-bear
+fox
 Q
-Does it swim?
+Is it known for swimming?
 Q
 Did it swallow Jonah?
 G
@@ -22,25 +22,45 @@ Q
 Does it have a shell?
 G
 turtle
+Q
+Is it an amphibian?
+G
+frog
 G
 duck
 G
 fish
 Q
-Does it eat cheese?
+Is it known for eating cheese?
 G
 mouse
 Q
 Does it purr?
+Q
+Is it known for having floppy ears?
+G
+rabbit
 G
 cat
 Q
-Is it afraid of mice?
+Is it known for being afraid of mice?
 G
 elephant
 Q
 Is it often nicknamed Billy?
 G
 goat
+Q
+Does it have a shell?
+G
+tortoise
+Q
+Does it have a long neck?
+G
+giraffe
+Q
+Is it known for having a horn?
+G
+rhino
 G
 lizard
