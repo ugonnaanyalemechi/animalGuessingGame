@@ -54,7 +54,7 @@ void GameOperations::processAnswerToComputerQuestion(AnimalNode*& currentNode) {
         return; // I think this can be removed
     }
     else {
-        cout << "Please type in either yes or no!\n";
+        cout << "\nPlease type in either yes or no!\n";
         return processAnswerToComputerQuestion(currentNode);
     }
 }

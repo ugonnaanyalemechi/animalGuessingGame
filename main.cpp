@@ -17,10 +17,6 @@ string convertStringToLowercase(string text) {
     return text;
 }
 
-void askUserToEnterValidAnswer() { // delete later
-    cout << "Please type in either yes or no!" << endl;
-}
-
 void declareFileOpenFail(string fileName) {
     cerr << "\nOops, can't open the specified file; no such file or directory.\n";
     cerr << "The file name used was: " << fileName << "\n";
