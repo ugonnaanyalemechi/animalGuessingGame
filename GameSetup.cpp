@@ -58,8 +58,6 @@ void GameSetup::loadAnimalGameData(AnimalNode*& newNode, AnimalNode*& rootNode, 
 void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
     string fileLine;
     AnimalNode* lastNodeWithQuestion = nullptr;
-    AnimalNode* lastNodeWithOnePtr = nullptr;
-    AnimalNode* lastNodeWithBothPtrs = nullptr;
     bool animalGuessDetected = false;
     bool questionDetected = false;
     bool onYesAnsPathway = true;
@@ -72,11 +70,10 @@ void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& r
     while (inputFile) {
         getline(inputFile, fileLine);
         debug1.show("Current line from the input file being processed", fileLine); debug1.pause();
-
+        
         if (fileLine == "")
             break;
 
-        // check type of file data
         if (fileLine == "G") { // next line in text file has the animal name
             animalGuessDetected = true;
             continue;
@@ -86,127 +83,134 @@ void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& r
             continue;
         }
 
-        if (checkBranchToFill) {
-            // algorithm for finding next point in binary tree to expand
-            currentNode = rootNode;
-            int counter = 0;
-            int loopCheck = 0;
-            while (currentNode->yesAns) {
-                if (rootNodeYesAnsPathwayComplete && !onRootNodeNoPathway) {
-                    currentNode = rootNode->noAns;
-                    onRootNodeNoPathway = true;
-                }
-                if (counter == 2) { // branch to fill was found
-                    // process branch to fill
-                    currentNode = lastNodeWithOnePtr;
-                    checkBranchToFill = false;
-                    if (rootNode == lastNodeWithOnePtr)
-                        rootNodeYesAnsPathwayComplete = true;
-                    break;
-                }
+        if (checkBranchToFill)
+            findNextBranchToFill(rootNodeYesAnsPathwayComplete, onRootNodeNoPathway, checkBranchToFill, rootNode, currentNode);
 
-                if ((currentNode->yesAns) && (currentNode->noAns == nullptr)) {
-                    lastNodeWithOnePtr = currentNode;
-                    currentNode = currentNode->yesAns;
-                    continue;
-                }
-                else if (currentNode->yesAns && currentNode->noAns) {
-                    lastNodeWithBothPtrs = currentNode;
-
-                    // check yes-answer node last node with both pointers
-                    currentNode = currentNode->yesAns;
-                    if (currentNode->question != "") {
-                        counter = 0; // eligibility counter is reset because criteria was not met
-                    }
-                    else if (currentNode->animal != "") {
-                        counter++; // eligibility counter was added to because one criteria was met
-                        currentNode = lastNodeWithBothPtrs;
-                    }
-
-                    // check no-answer node last node with both pointers
-                    currentNode = lastNodeWithBothPtrs->noAns;
-                    if (currentNode->question != "") {
-                        counter = 0;
-                        //continue;
-                    }
-                    else if (currentNode->animal != "") {
-                        counter++;
-                        currentNode = lastNodeWithBothPtrs;
-                        //continue;
-                    }
-
-                    loopCheck++;
-                    if (loopCheck == 10) {
-                        counter = 2;
-                        continue;
-                    }
-                }
-
-                // this part of code may be unnecesary
-                if ((!currentNode->yesAns) && (!currentNode->noAns)) {
-                    currentNode = lastNodeWithBothPtrs->noAns;
-                    counter++;
-                    continue;
-                }
-            }
-        }
-
-        // creates the root node of the binary tree with a question, creates a node for the yes-answer pathway
         if (questionDetected && !rootNodeEstablished) {
-            newNode = new AnimalNode;
-            rootNode = newNode;
-            rootNode->question = fileLine;
-            newNode = new AnimalNode;
-            rootNode->yesAns = newNode;
-            currentNode = newNode;
-            rootNodeEstablished = true;
-            questionDetected = false;
-            continue;
-        }
-        // fills current node with question pulled from the file, creates a node for the yes-answer pathway 
-        if (questionDetected && onYesAnsPathway) {
-            lastNodeWithQuestion = currentNode;
-            currentNode->question = fileLine;
-            newNode = new AnimalNode;
-            currentNode->yesAns = newNode;
-            currentNode = newNode;
-            questionDetected = false;
-            continue;
-        }
-        // creates a new node for the no-answer pathway, fills that node with a question, creates a new node for the yes-answer pathway, switches to yes-answer pathway via flag
-        if (questionDetected && onNoAnsPathway) {
-            newNode = new AnimalNode;
-            currentNode->noAns = newNode;
-            currentNode = newNode;
-            currentNode->question = fileLine;
-            newNode = new AnimalNode;
-            currentNode->yesAns = newNode;
-            lastNodeWithQuestion = currentNode;
-            currentNode = newNode;
-            onNoAnsPathway = false;
-            onYesAnsPathway = true;
-            questionDetected = false;
+            setUpRootNode(newNode, rootNode, currentNode, fileLine, rootNodeEstablished, questionDetected);
             continue;
         }
 
-        // fills current node with animal guess, switches to no-answer pathway via flag
-        if (animalGuessDetected && onYesAnsPathway) {
-            currentNode->animal = fileLine;
-            currentNode = lastNodeWithQuestion;
-            onYesAnsPathway = false;
-            onNoAnsPathway = true;
-            animalGuessDetected = false;
+        if (questionDetected && onYesAnsPathway) {
+            setUpQuestionNodeForYesPathway(newNode, currentNode, lastNodeWithQuestion, fileLine, questionDetected);
             continue;
         }
-        // creates a new node for the no-answer pathway, fills that node with an animal guess
+
+        if (questionDetected && onNoAnsPathway) {
+            setUpQuestionNodeForNoPathway(newNode, currentNode, lastNodeWithQuestion, fileLine, questionDetected, onNoAnsPathway, onYesAnsPathway);
+            continue;
+        }
+
+        if (animalGuessDetected && onYesAnsPathway) {
+            setUpAnimalGuessNodeForYesPathway(currentNode, lastNodeWithQuestion, fileLine, onYesAnsPathway, onNoAnsPathway, animalGuessDetected);
+            continue;
+        }
+
         if (animalGuessDetected && onNoAnsPathway) {
-            newNode = new AnimalNode;
-            currentNode->noAns = newNode;
-            currentNode = newNode;
-            currentNode->animal = fileLine;
-            checkBranchToFill = true;
-            animalGuessDetected = false;
+            setUpAnimalGuessNodeForNoPathway(newNode, currentNode, fileLine, checkBranchToFill, animalGuessDetected);
             continue;
         }
     }
+}
+
+void GameSetup::findNextBranchToFill(bool& rootNodeYesAnsPathwayComplete, bool& onRootNodeNoPathway, bool& checkBranchToFill, AnimalNode* rootNode, AnimalNode*& currentNode) {
+    currentNode = rootNode;
+    AnimalNode* lastNodeWithOnePtr = nullptr;
+    AnimalNode* lastNodeWithBothPtrs = nullptr;
+    int counter = 0;
+    int loopCheck = 0;
+    while (currentNode->yesAns) {
+        if (rootNodeYesAnsPathwayComplete && !onRootNodeNoPathway) {
+            currentNode = rootNode->noAns;
+            onRootNodeNoPathway = true;
+        }
+        if (counter == 2) { // branch to fill was found
+            currentNode = lastNodeWithOnePtr;
+            checkBranchToFill = false;
+            if (rootNode == lastNodeWithOnePtr)
+                rootNodeYesAnsPathwayComplete = true;
+            break;
+        }
+
+        if ((currentNode->yesAns) && (currentNode->noAns == nullptr)) {
+            lastNodeWithOnePtr = currentNode;
+            currentNode = currentNode->yesAns;
+            continue;
+        }
+        else if (currentNode->yesAns && currentNode->noAns) {
+            lastNodeWithBothPtrs = currentNode;
+
+            currentNode = currentNode->yesAns;
+            checkPointedNodeOfNodeWithBothPtrs(currentNode, lastNodeWithBothPtrs, counter);
+
+            currentNode = lastNodeWithBothPtrs->noAns;
+            checkPointedNodeOfNodeWithBothPtrs(currentNode, lastNodeWithBothPtrs, counter);
+
+            loopCheck++;
+            if (loopCheck == 10) {
+                counter = 2;
+                continue;
+            }
+        }
+    }
+}
+
+void GameSetup::checkPointedNodeOfNodeWithBothPtrs(AnimalNode*& currentNode, AnimalNode* lastNodeWithBothPtrs, int& counter) {
+    if (currentNode->question != "")
+        counter = 0; // eligibility counter is reset to to check through question node
+    else if (currentNode->animal != "") {
+        counter++; // eligibility counter was added to because animal guess node may indicate complete dead end
+        currentNode = lastNodeWithBothPtrs;
+    }
+}
+
+void GameSetup::setUpRootNode(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode, string fileLine, bool& rootNodeEstablished, bool& questionDetected) {
+    newNode = new AnimalNode;
+    rootNode = newNode;
+    rootNode->question = fileLine;
+    newNode = new AnimalNode;
+    rootNode->yesAns = newNode;
+    currentNode = newNode;
+    rootNodeEstablished = true;
+    questionDetected = false;
+}
+
+void GameSetup::setUpQuestionNodeForYesPathway(AnimalNode*& newNode, AnimalNode*& currentNode, AnimalNode*& lastNodeWithQuestion, string fileLine, bool& questionDetected) {
+    lastNodeWithQuestion = currentNode;
+    currentNode->question = fileLine;
+    newNode = new AnimalNode;
+    currentNode->yesAns = newNode;
+    currentNode = newNode;
+    questionDetected = false;
+}
+
+void GameSetup::setUpQuestionNodeForNoPathway(AnimalNode*& newNode, AnimalNode*& currentNode, AnimalNode*& lastNodeWithQuestion, string fileLine, bool& questionDetected, bool& onNoAnsPathway, bool& onYesAnsPathway) {
+    newNode = new AnimalNode;
+    currentNode->noAns = newNode;
+    currentNode = newNode;
+    currentNode->question = fileLine;
+    newNode = new AnimalNode;
+    currentNode->yesAns = newNode;
+    lastNodeWithQuestion = currentNode;
+    currentNode = newNode;
+    onNoAnsPathway = false;
+    onYesAnsPathway = true;
+    questionDetected = false;
+}
+
+void GameSetup::setUpAnimalGuessNodeForYesPathway(AnimalNode*& currentNode, AnimalNode* lastNodeWithQuestion, string fileLine, bool& onYesAnsPathway, bool& onNoAnsPathway, bool& animalGuessDetected) {
+    currentNode->animal = fileLine;
+    currentNode = lastNodeWithQuestion;
+    onYesAnsPathway = false;
+    onNoAnsPathway = true;
+    animalGuessDetected = false;
+}
+
+void GameSetup::setUpAnimalGuessNodeForNoPathway(AnimalNode*& newNode, AnimalNode*& currentNode, string fileLine, bool& checkBranchToFill, bool& animalGuessDetected) {
+    newNode = new AnimalNode;
+    currentNode->noAns = newNode;
+    currentNode = newNode;
+    currentNode->animal = fileLine;
+    checkBranchToFill = true;
+    animalGuessDetected = false;
 }
