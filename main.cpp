@@ -27,7 +27,6 @@ void declareFileOpenFail(string fileName) {
     exit(0);
 }
 
-// -- MAIN -- //
 int main() {
     AnimalNode* rootNode;
     AnimalNode* currentNode;
