@@ -22,6 +22,7 @@ void GameOperations::processGameOperations(AnimalNode*& rootNode, AnimalNode*& c
 }
 
 void GameOperations::initializeGame(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
+    system("cls");
     promptUserToThinkOfAnimal();
     currentNode = rootNode;
     gameInProgress = true;
@@ -29,7 +30,7 @@ void GameOperations::initializeGame(AnimalNode*& newNode, AnimalNode*& rootNode,
 
 void GameOperations::promptUserToThinkOfAnimal() {
     int counter = 0;
-    cout << "\nThink of an animal...when you are ready, press the enter key once or twice to proceed.";
+    cout << "Think of an animal...when you are ready, press the enter key once or twice to proceed.";
     cin.ignore();
     while (cin.get() != '\n') // when an enter key is not inputted
         counter++; // counts the number of key inputs that do not correspond with the enter key
