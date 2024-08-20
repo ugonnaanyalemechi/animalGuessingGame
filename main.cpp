@@ -1,14 +1,11 @@
 ﻿#include <iostream>
-#include "AnimalNode.h"
 #include "Debugging.h"
 #include "GameSetup.h"
 #include "GameOperations.h"
-#include "GameSave.h"
 
 using namespace std;
 
 string convertStringToLowercase(string);
-void askUserToEnterValidAnswer();
 void declareFileOpenFail(string);
 
 string convertStringToLowercase(string text) {

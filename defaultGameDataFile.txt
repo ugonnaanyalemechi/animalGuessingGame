@@ -35,11 +35,11 @@ Is it known for eating cheese?
 G
 mouse
 Q
-Does it purr?
+Is it known for purring?
 Q
-Is it known for having floppy ears?
+Is this animal known for its mane?
 G
-rabbit
+lion
 G
 cat
 Q
