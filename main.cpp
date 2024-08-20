@@ -3,7 +3,7 @@
 #include "GameSetup.h"
 #include "GameOperations.h"
 
-using namespace std;
+using std::cerr;
 
 string convertStringToLowercase(string);
 void declareFileOpenFail(string);
