@@ -10,7 +10,7 @@ fstream inputFile;
 Debugging debug1;
 
 void GameSetup::gameSetupProcess(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    cout << "Welcome to the Animal Guessing Game!\n\n";
+    cout << "Welcome to the Animal Guessing Game!\n";
     processAnswerForGameDataOptions();
     loadAnimalGameData(newNode, rootNode, currentNode);
 }
@@ -24,14 +24,14 @@ void GameSetup::processAnswerForGameDataOptions() {
     else if (answer == "no")
         gameDataFile = enterInputFileName();
     else {
-        cout << "Please type in either yes or no!\n";
+        cout << "\nPlease type in either yes or no!\n";
         return processAnswerForGameDataOptions();
     }
 }
 
 string GameSetup::askUserGameDataOptions() {
     string answer;
-    cout << "Would you like to use the default game data? If not, you can enter a file of your own.\n";
+    cout << "\nWould you like to use the default game data file or use your own file? (Enter 'yes' or 'no')\n";
     cout << "Enter answer here: "; cin >> answer;
     debug1.show("User's answer");
     return answer;
