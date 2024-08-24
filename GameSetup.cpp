@@ -1,13 +1,11 @@
 #include "GameSetup.h"
 #include "main.h"
-#include "Debugging.h"
 #include <iostream>
 #include <fstream>
 
 using namespace std;
 
 fstream inputFile;
-Debugging debug1;
 
 void GameSetup::gameSetupProcess(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
     cout << "Welcome to the Animal Guessing Game!\n";
@@ -33,7 +31,6 @@ string GameSetup::askUserGameDataOptions() {
     string answer;
     cout << "\nWould you like to use the default game data file or use your own file? (Enter 'yes' or 'no')\n";
     cout << "Enter answer here: "; cin >> answer;
-    debug1.show("User's answer");
     return answer;
 }
 
@@ -50,7 +47,6 @@ void GameSetup::openInputFile() {
 }
 
 void GameSetup::loadAnimalGameData(AnimalNode*& newNode, AnimalNode*& rootNode, AnimalNode*& currentNode) {
-    debug1.show("File name used", gameDataFile); debug1.pause();
     openInputFile();
     transferInputFileDataToGame(newNode, rootNode, currentNode);
 }
@@ -69,7 +65,6 @@ void GameSetup::transferInputFileDataToGame(AnimalNode*& newNode, AnimalNode*& r
 
     while (inputFile) {
         getline(inputFile, fileLine);
-        debug1.show("Current line from the input file being processed", fileLine); debug1.pause();
         
         if (fileLine == "")
             break;

@@ -1,12 +1,9 @@
 #include "GameOperations.h"
 #include "main.h"
-#include "Debugging.h"
 #include "GameSave.h"
 #include <iostream>
 
 using namespace std;
-
-Debugging debug2;
 
 void GameOperations::processGameOperations(AnimalNode*& rootNode, AnimalNode*& currentNode, AnimalNode*& newNode, GameSave gameSave, GameSetup gameSetup) {
     while (startGame) {
@@ -35,7 +32,6 @@ void GameOperations::promptUserToThinkOfAnimal() {
         counter++; // counts the number of key inputs that do not correspond with the enter key
     if (counter != 0) {
         cout << "\nPlease press the enter key to proceed!\n";
-        debug2.show("Number of non-enter-key keystrokes", counter);
         return promptUserToThinkOfAnimal();
     }
 }
@@ -61,18 +57,15 @@ void GameOperations::processAnswerToComputerQuestion(AnimalNode*& currentNode) {
 string GameOperations::askUserQuestion(string answer, AnimalNode* currentNode) {
     cout << "\n" << currentNode->question << "\n";
     cout << "Enter answer here: "; cin >> answer;
-    debug2.show("User's answer", answer);
     return answer;
 }
 
 void GameOperations::goToNodeYesAnsInCurrentNodePointsTo(AnimalNode*& currentNode) {
     currentNode = currentNode->yesAns;
-    debug2.showNodeContents("Current node", currentNode);
 }
 
 void GameOperations::goToNodeNoAnsInCurrentNodePointsTo(AnimalNode*& currentNode) {
     currentNode = currentNode->noAns;
-    debug2.showNodeContents("Current node", currentNode);
 }
 
 void GameOperations::processAnswerToComputerAnimalGuess(AnimalNode*& currentNode, AnimalNode*& newNode) {
@@ -93,7 +86,6 @@ string GameOperations::guessAnimal(AnimalNode* currentNode) {
     string answer;
     cout << "\nIs the animal you are thinking of a(an) " << currentNode->animal << "?\n";
     cout << "Enter answer here: "; cin >> answer;
-    debug2.show("User's answer", answer);
     return answer;
 }
 
@@ -116,7 +108,6 @@ void GameOperations::storeNewAnimalIntoNewNode(AnimalNode*& newNode) {
     cout << "Enter animal here: "; cin.ignore(); getline(cin, animal);
     animal = convertStringToLowercase(animal);
     newNode->animal = animal;
-    debug2.show("Animal user was thinking of", animal);
 }
 
 void GameOperations::storeNewQuestionIntoCurrentNode(AnimalNode*& currentNode, AnimalNode* newNode) {
@@ -125,7 +116,6 @@ void GameOperations::storeNewQuestionIntoCurrentNode(AnimalNode*& currentNode, A
     cout << "Enter question here: "; getline(cin, question);
     question[0] = toupper(question[0]); // converts first letter in question to uppercase
     currentNode->question = question;
-    debug2.show("New question", question);
 }
 
 void GameOperations::processNewAnsForNewNode(AnimalNode*& currentNode, AnimalNode*& newNode) {
@@ -145,49 +135,31 @@ string GameOperations::askForNewAnswerForNewNode(AnimalNode* newNode) {
     string newAnswer;
     cout << "\nFor a " << newNode->animal << ", is the answer yes or no?\n";
     cout << "Enter answer here: "; cin >> newAnswer;
-    debug2.show("User's answer for " + newNode->animal, newAnswer);
     return newAnswer;
 }
 
 void GameOperations::processYesAnsForNewAnimal(AnimalNode*& currentNode, AnimalNode*& newNode) {
-    currentNodeYesAnsPointsToNewNode(currentNode, newNode);
-    storeCurrentNodeAnimalIntoNewNodeNoAns(newNode, currentNode); // involves creation of new node, not previous new node
-    removeAnimalInCurrentNode(currentNode); // because current node is now a question node
-}
-
-void GameOperations::currentNodeYesAnsPointsToNewNode(AnimalNode*& currentNode, AnimalNode* newNode) {
     currentNode->yesAns = newNode;
-    debug2.showNodeContents("New animal node ('yes' answer)", newNode);
+    storeCurrentNodeAnimalIntoNewNodeNoAns(newNode, currentNode); // involves creation of new node, not previous new node
+    currentNode->animal = ""; // because current node is now a question node
 }
 
 void GameOperations::storeCurrentNodeAnimalIntoNewNodeNoAns(AnimalNode*& newNode, AnimalNode* currentNode) {
     newNode = new AnimalNode;
     newNode->animal = currentNode->animal;
     currentNode->noAns = newNode;
-    debug2.showNodeContents("New node w/ old animal ('no' answer)", newNode);
-}
-
-void GameOperations::removeAnimalInCurrentNode(AnimalNode*& currentNode) {
-    currentNode->animal = "";
-    debug2.showNodeContents("Question (current) node", currentNode);
 }
 
 void GameOperations::processNoAnsForNewAnimal(AnimalNode*& currentNode, AnimalNode*& newNode) {
-    currentNodeNoAnsPointsToNewNode(currentNode, newNode);
-    storeCurrentNodeAnimalIntoNewNodeYesAns(newNode, currentNode);
-    removeAnimalInCurrentNode(currentNode);
-}
-
-void GameOperations::currentNodeNoAnsPointsToNewNode(AnimalNode*& currentNode, AnimalNode* newNode) {
     currentNode->noAns = newNode;
-    debug2.showNodeContents("New animal node ('no' answer)", newNode);
+    storeCurrentNodeAnimalIntoNewNodeYesAns(newNode, currentNode);
+    currentNode->animal = "";
 }
 
 void GameOperations::storeCurrentNodeAnimalIntoNewNodeYesAns(AnimalNode*& newNode, AnimalNode* currentNode) {
     newNode = new AnimalNode;
     newNode->animal = currentNode->animal;
     currentNode->yesAns = newNode;
-    debug2.showNodeContents("New node w/ old animal ('yes' answer)", newNode);
 }
 
 void GameOperations::askUserToPlayAgain(AnimalNode* rootNode, GameSave gameSave, GameSetup gameSetup) {
@@ -195,7 +167,6 @@ void GameOperations::askUserToPlayAgain(AnimalNode* rootNode, GameSave gameSave,
     cout << "\nWould you like to play again?\n";
     cout << "Enter answer here: "; cin >> answer;
     answer = convertStringToLowercase(answer);
-    debug2.show("User's response", answer);
 
     processUserResponseToPlayAgain(rootNode, answer, gameSave, gameSetup);
 }

@@ -1,11 +1,8 @@
 #include "GameSave.h"
 #include "main.h"
-#include "Debugging.h"
 #include <fstream>
 
 using namespace std;
-
-Debugging debug3;
 
 void GameSave::saveAnimalGameData(AnimalNode* rootNode, GameSetup gameSetup) {
     ofstream outputFile(gameSetup.gameDataFile);
@@ -22,14 +19,10 @@ void GameSave::writeGameDataToFile(ostream& outputFile, AnimalNode* currentNode)
     if (currentNode->animal != "") { // if an animal guess node
         outputFile << "G\n";
         outputFile << currentNode->animal << "\n";
-        debug3.show("Animal guess saved", currentNode->animal);
-        debug3.pause();
     }
     else { // else, it is a question node
         outputFile << "Q\n";
         outputFile << currentNode->question << "\n";
-        debug3.show("Question saved", currentNode->question);
-        debug3.pause();
         writeGameDataToFile(outputFile, currentNode->yesAns);
         writeGameDataToFile(outputFile, currentNode->noAns);
     }
