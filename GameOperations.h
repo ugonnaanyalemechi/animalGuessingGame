@@ -11,15 +11,12 @@ class GameOperations
 private:
 	bool startGame = true;
 	bool gameInProgress = false;
-
 	void initializeGame(AnimalNode*&, AnimalNode*&, AnimalNode*&);
 	void promptUserToThinkOfAnimal();
-
 	void processAnswerToComputerQuestion(AnimalNode*&);
 	string askUserQuestion(string, AnimalNode*);
 	void goToNodeYesAnsInCurrentNodePointsTo(AnimalNode*&);
 	void goToNodeNoAnsInCurrentNodePointsTo(AnimalNode*&);
-
 	void processAnswerToComputerAnimalGuess(AnimalNode*&, AnimalNode*&);
 	string guessAnimal(AnimalNode*);
 	void computerWinsGame();
@@ -29,13 +26,9 @@ private:
 	void processNewAnsForNewNode(AnimalNode*&, AnimalNode*&);
 	string askForNewAnswerForNewNode(AnimalNode*);
 	void processYesAnsForNewAnimal(AnimalNode*&, AnimalNode*&);
-	void currentNodeYesAnsPointsToNewNode(AnimalNode*&, AnimalNode*);
 	void storeCurrentNodeAnimalIntoNewNodeNoAns(AnimalNode*&, AnimalNode*);
-	void removeAnimalInCurrentNode(AnimalNode*&);
 	void processNoAnsForNewAnimal(AnimalNode*&, AnimalNode*&);
-	void currentNodeNoAnsPointsToNewNode(AnimalNode*&, AnimalNode*);
 	void storeCurrentNodeAnimalIntoNewNodeYesAns(AnimalNode*&, AnimalNode*);
-
 	void askUserToPlayAgain(AnimalNode*, GameSave, GameSetup);
 	void processUserResponseToPlayAgain(AnimalNode*, string, GameSave, GameSetup);
 	void endGame(AnimalNode*, GameSave, GameSetup);

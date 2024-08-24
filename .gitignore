@@ -1,2 +1,4 @@
 out/
 .vs/
+Debugging.cpp
+Debugging.h
