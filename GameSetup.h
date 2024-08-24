@@ -24,5 +24,5 @@ private:
 
 public:
 	void gameSetupProcess(AnimalNode*&, AnimalNode*&, AnimalNode*&);
-	string gameDataFile = "../../../defaultGameDataFile.txt";
+	string gameDataFile = "../../../../defaultGameDataFile.txt";
 };
